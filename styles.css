@@ -11,18 +11,24 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  margin: 0;
+  padding: 16px;
 }
 
 .comprovante-container {
   background-color: white;
   padding: 40px;
-  width: 450px;
+  width: min(450px, 100%);
   border-radius: 12px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
   text-align: center;
   font-size: 14px;
   color: #333;
+}
+
+.dado-comprovante {
+  color: #7f8c8d;
+  font-weight: normal;
+  overflow-wrap: anywhere;
 }
 
 h1 {
@@ -43,7 +49,7 @@ h1 {
   color: #7f8c8d;
 }
 
-.informacoes p span {
+.informacoes p span:not(.dado-comprovante) {
   font-weight: bold;
   color: #2c3e50;
 }
@@ -103,4 +109,102 @@ h1 {
 
 .location-info span {
   font-weight: bold;
+}
+
+.configuracao-container {
+  text-align: left;
+}
+
+.configuracao-container h1 {
+  margin-bottom: 10px;
+}
+
+.configuracao-etiqueta {
+  margin-bottom: 8px;
+  color: #7f8c8d;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.configuracao-introducao {
+  margin-bottom: 26px;
+  color: #7f8c8d;
+  line-height: 1.5;
+}
+
+.form-configuracao,
+.resultado-configuracao {
+  display: grid;
+  gap: 10px;
+}
+
+.form-configuracao label,
+.resultado-configuracao label {
+  margin-top: 6px;
+  color: #2c3e50;
+  font-weight: 700;
+}
+
+.form-configuracao input,
+.resultado-configuracao input {
+  width: 100%;
+  border: 1px solid #d8e1e8;
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: #2c3e50;
+  font: inherit;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-configuracao input:focus,
+.resultado-configuracao input:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.14);
+}
+
+.form-configuracao .botao,
+.resultado-configuracao .botao {
+  justify-self: start;
+  margin-top: 8px;
+}
+
+.mensagem-formulario {
+  min-height: 18px;
+  color: #c0392b;
+  font-size: 13px;
+}
+
+.resultado-configuracao {
+  margin-top: 28px;
+  border-top: 1px solid #e7edf2;
+  padding-top: 22px;
+}
+
+.resultado-configuracao[hidden] {
+  display: none;
+}
+
+.botao-secundario {
+  background-color: #2c3e50;
+}
+
+.botao-secundario:hover {
+  background-color: #1f2d3a;
+}
+
+#mensagem-copia {
+  color: #537083;
+}
+
+@media (max-width: 520px) {
+  .comprovante-container {
+    padding: 28px 22px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
 }

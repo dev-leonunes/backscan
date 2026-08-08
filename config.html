@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configurar comprovante</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <main class="comprovante-container configuracao-container">
+    <p class="configuracao-etiqueta">Configuração</p>
+    <h1>Dados do comprovante</h1>
+    <p class="configuracao-introducao">Informe o nome e o valor para gerar um link compartilhável.</p>
+
+    <form id="form-configuracao" class="form-configuracao" novalidate>
+      <label for="nome">Nome</label>
+      <input id="nome" name="nome" type="text" autocomplete="name" maxlength="120" required>
+
+      <label for="valor">Valor</label>
+      <input id="valor" name="valor" type="text" inputmode="numeric" placeholder="R$ 0,00" required>
+
+      <p id="erro-configuracao" class="mensagem-formulario" role="alert" aria-live="polite"></p>
+      <button class="botao" type="submit">Gerar link</button>
+    </form>
+
+    <section id="resultado-configuracao" class="resultado-configuracao" hidden>
+      <label for="link-comprovante">Link do comprovante</label>
+      <input id="link-comprovante" type="text" readonly>
+      <button id="copiar-link" class="botao botao-secundario" type="button">Copiar link</button>
+      <p id="mensagem-copia" class="mensagem-formulario" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <script type="module" src="config.js"></script>
+</body>
+
+</html>

