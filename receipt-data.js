@@ -1,7 +1,4 @@
-export const DEFAULT_RECEIPT_DATA = Object.freeze({
-    nome: "João Silva de Oliveira",
-    valor: 1000
-});
+export const RECEIPT_DATA_TYPE = "comprovante";
 
 export function validateReceiptData(data) {
     if (!data || typeof data !== "object") {
@@ -10,6 +7,10 @@ export function validateReceiptData(data) {
 
     const nome = typeof data.nome === "string" ? data.nome.trim() : "";
     const valor = data.valor;
+
+    if (data.tipo !== RECEIPT_DATA_TYPE) {
+        return null;
+    }
 
     if (!nome || nome.length > 120) {
         return null;
@@ -26,7 +27,7 @@ export function validateReceiptData(data) {
         return null;
     }
 
-    return { nome, valor };
+    return { tipo: RECEIPT_DATA_TYPE, nome, valor };
 }
 
 export function encodeReceiptData(data) {

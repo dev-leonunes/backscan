@@ -1,4 +1,4 @@
-import { encodeReceiptData } from "./receipt-data.js";
+import { encodeReceiptData, RECEIPT_DATA_TYPE } from "./receipt-data.js";
 
 const currencyFormatter = new Intl.NumberFormat("pt-BR", {
     style: "currency",
@@ -39,9 +39,12 @@ form.addEventListener("submit", event => {
         return;
     }
 
-    const encodedData = encodeReceiptData({ nome, valor: valueInCents / 100 });
-    const receiptUrl = new URL("index.html", window.location.href);
-    receiptUrl.searchParams.set("dados", encodedData);
+    const encodedData = encodeReceiptData({
+        tipo: RECEIPT_DATA_TYPE,
+        nome,
+        valor: valueInCents / 100
+    });
+    const receiptUrl = new URL(`/c/${encodedData}`, window.location.origin);
 
     errorMessage.textContent = "";
     copyMessage.textContent = "";
