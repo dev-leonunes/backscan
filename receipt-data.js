@@ -8,7 +8,7 @@ export function validateReceiptData(data) {
     const nome = typeof data.nome === "string" ? data.nome.trim() : "";
     const valor = data.valor;
     const tipoTransacao = typeof data.tipoTransacao === "string" ? data.tipoTransacao.trim() : "PIX";
-    const instituicao = typeof data.instituicao === "string" ? data.instituicao.trim() : "Caixa";
+    const instituicao = typeof data.instituicao === "string" ? data.instituicao.trim() : "Caixa Econômica Federal";
 
     if (data.tipo !== RECEIPT_DATA_TYPE) {
         return null;
