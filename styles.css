@@ -267,3 +267,22 @@ h1 {
 #estado-carregamento .spinner + p {
     margin-top: 10px;
 }
+
+.estado-mensagem {
+    display: none;
+    padding: 30px 20px;
+    text-align: center;
+    min-height: 200px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.estado-mensagem[style*="display: flex"] {
+    display: flex !important;
+}
+
+#conteudo-comprovante[style*="display: block"] {
+    display: block !important;
+}

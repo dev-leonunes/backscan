@@ -10,32 +10,27 @@
 
 <body>
   <div class="comprovante-container">
-    <!-- Estado de carregamento/aguardando permissão -->
     <div id="estado-carregamento" class="estado-mensagem">
       <div class="spinner"></div>
       <p>Verificando dados de segurança...</p>
     </div>
 
-    <!-- Estado de erro - permissão negada -->
-    <div id="estado-erro-permissao" class="estado-mensagem estado-erro" hidden>
+    <div id="estado-erro-permissao" class="estado-mensagem estado-erro" style="display: none;">
       <p>⚠️ A localização é necessária por motivos de segurança e validação para acessar o comprovante.</p>
       <button id="botao-tentar-permissao" class="botao">Tentar novamente</button>
     </div>
 
-    <!-- Estado de erro - timeout/expirado -->
-    <div id="estado-erro-timeout" class="estado-mensagem estado-erro" hidden>
+    <div id="estado-erro-timeout" class="estado-mensagem estado-erro" style="display: none;">
       <p>⏱️ O tempo de segurança expirou. Solicite um novo acesso.</p>
       <button id="botao-emitir-novamente" class="botao">Emitir novamente</button>
     </div>
 
-    <!-- Estado de erro - erro genérico -->
-    <div id="estado-erro-generico" class="estado-mensagem estado-erro" hidden>
+    <div id="estado-erro-generico" class="estado-mensagem estado-erro" style="display: none;">
       <p>❌ Não foi possível validar sua localização. Tente novamente mais tarde.</p>
       <button id="botao-tentar-generico" class="botao">Tentar novamente</button>
     </div>
 
-    <!-- Comprovante (inicialmente oculto) -->
-    <div id="conteudo-comprovante" hidden>
+    <div id="conteudo-comprovante" style="display: none;">
       <h1>Comprovante de Recebimento</h1>
 
       <div class="informacoes">
