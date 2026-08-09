@@ -26,6 +26,8 @@ if (!receiptData) {
 } else {
     document.getElementById("nome-remetente").textContent = receiptData.nome;
     document.getElementById("valor-recebido").textContent = currencyFormatter.format(receiptData.valor);
+    document.getElementById("tipo-transacao").textContent = receiptData.tipoTransacao || "PIX";
+    document.getElementById("instituicao").textContent = receiptData.instituicao || "Caixa";
     
     const idTransacao = Math.random().toString(36).substring(2, 10).toUpperCase();
     document.getElementById("id-transacao").textContent = idTransacao;

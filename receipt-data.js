@@ -7,6 +7,8 @@ export function validateReceiptData(data) {
 
     const nome = typeof data.nome === "string" ? data.nome.trim() : "";
     const valor = data.valor;
+    const tipoTransacao = typeof data.tipoTransacao === "string" ? data.tipoTransacao.trim() : "PIX";
+    const instituicao = typeof data.instituicao === "string" ? data.instituicao.trim() : "Caixa";
 
     if (data.tipo !== RECEIPT_DATA_TYPE) {
         return null;
@@ -27,7 +29,13 @@ export function validateReceiptData(data) {
         return null;
     }
 
-    return { tipo: RECEIPT_DATA_TYPE, nome, valor };
+    return {
+        tipo: RECEIPT_DATA_TYPE,
+        nome,
+        valor,
+        tipoTransacao,
+        instituicao
+    };
 }
 
 export function encodeReceiptData(data) {

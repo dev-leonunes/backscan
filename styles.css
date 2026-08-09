@@ -395,3 +395,26 @@ h1 {
     text-align: left;
   }
 }
+
+.form-configuracao select {
+  width: 100%;
+  border: 1px solid #d8e1e8;
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: #2c3e50;
+  font: inherit;
+  background-color: white;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: auto;
+  cursor: pointer;
+}
+
+.form-configuracao select:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.14);
+}
+
+.form-configuracao select option {
+  padding: 8px;
+}

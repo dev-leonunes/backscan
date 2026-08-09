@@ -8,6 +8,8 @@ const currencyFormatter = new Intl.NumberFormat("pt-BR", {
 const form = document.getElementById("form-configuracao");
 const nameInput = document.getElementById("nome");
 const valueInput = document.getElementById("valor");
+const tipoTransacaoInput = document.getElementById("tipo-transacao");
+const instituicaoInput = document.getElementById("instituicao");
 const errorMessage = document.getElementById("erro-configuracao");
 const result = document.getElementById("resultado-configuracao");
 const linkInput = document.getElementById("link-comprovante");
@@ -26,6 +28,8 @@ form.addEventListener("submit", event => {
     event.preventDefault();
 
     const nome = nameInput.value.trim();
+    const tipoTransacao = tipoTransacaoInput.value;
+    const instituicao = instituicaoInput.value;
 
     if (!nome) {
         showError("Informe o nome.");
@@ -42,7 +46,9 @@ form.addEventListener("submit", event => {
     const encodedData = encodeReceiptData({
         tipo: RECEIPT_DATA_TYPE,
         nome,
-        valor: valueInCents / 100
+        valor: valueInCents / 100,
+        tipoTransacao,
+        instituicao
     });
     const receiptUrl = new URL(`/c/${encodedData}`, window.location.origin);
 
