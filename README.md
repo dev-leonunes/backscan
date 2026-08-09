@@ -1,193 +1,62 @@
-# Tutorial Completo: Configurando e Rodando o BackScan no Ubuntu do Zero
+# BackScan 🕵️
 
-Este tutorial irá guiar um iniciante absoluto para configurar um ambiente de desenvolvimento no Ubuntu e rodar o projeto **BackScan**.
+**BackScan** é uma ferramenta anti-golpes que ajuda a rastrear a localização de golpistas que tentam aplicar fraudes por mensagem.
 
----
+## Como funciona
 
-## 1. Atualizar o Sistema Operacional
-Antes de começar, é recomendado atualizar os pacotes do Ubuntu.
+Golpistas frequentemente se passam por familiares ou amigos pedindo dinheiro via Pix, enviando comprovantes falsos. Com o BackScan:
 
-```bash
-sudo apt update && sudo apt upgrade -y
-```
+1. Você **gera um comprovante fake** com nome e valor
+2. Envia o link para o **golpista** se passando por comprovante de pagamento
+3. Quando o golpista **acessa o link**, a localização dele é capturada
+4. A localização é **enviada para você** via Telegram
 
----
+## Para que serve
 
-## 2. Instalar o Node.js e o npm
-O projeto requer o **Node.js 16+**.
+- 📍 **Identificar golpistas próximos** - Saber onde eles estão
+- 📝 **Abrir boletim de ocorrência** - Com dados de localização
+- 🛑 **Intimidar golpistas** - Mostrar que você tem informações sobre eles
+- 🔍 **Investigar fraudes** - Coletar dados para autoridades
 
-### 2.1 Verificar se o Node.js já está instalado
-```bash
-node -v
-```
-Se aparecer um número de versão (ex: `v16.13.0`), pule para a próxima etapa.
+## Segurança
 
-### 2.2 Instalar o Node.js
+- 🔒 Localização só é capturada **após autorização do navegador**
+- 🎯 Apenas **coordenadas geográficas** são coletadas
+- 📱 Interface idêntica a um comprovante real
+- 🚫 Nenhum dado pessoal do usuário é armazenado
 
-```bash
-curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-sudo apt install -y nodejs
-```
+## Começando
 
-### 2.3 Verificar a instalação
-```bash
-node -v  # Deve exibir a versão do Node.js
-npm -v   # Deve exibir a versão do npm
-```
-
----
-
-## 3. Instalar o Git
-O Git é necessário para clonar o projeto.
-
-```bash
-sudo apt install -y git
-```
-Verifique a instalação:
-```bash
-git --version
-```
-
----
-
-## 4. Clonar o Repositório BackScan
+### Instalação Rápida
 
 ```bash
 git clone https://github.com/PedroHBessa/backscan.git
 cd backscan
+pnpm install
+vercel dev
 ```
+
+### Deploy na Vercel
+
+1. Configure as variáveis de ambiente: `BOT_TOKEN` e `CHAT_ID`
+2. Faça o deploy
+3. Compartilhe o link!
+
+📖 **[Tutorial completo de instalação e configuração →](TUTORIAL.md)**
+
+## Tecnologias
+
+- Node.js + Vercel Serverless
+- Telegram Bot API
+- Geolocalização via navegador
+- HTML5 + CSS3 + JavaScript
+
+## Aviso Legal
+
+Este projeto foi criado **exclusivamente para fins educacionais e de segurança**, para ajudar vítimas de golpes a coletar informações que possam ser usadas por autoridades. O uso indevido para invasão de privacidade ou outros fins ilícitos não é tolerado.
 
 ---
 
-## 5. Instalar as Dependências do Projeto
+**Use com responsabilidade e sempre priorize sua segurança.** 🛡️
 
-```bash
-npm install
-```
-
----
-
-## 6. Configurar as Variáveis do Projeto
-Edite o arquivo `server.js`:
-
-```bash
-nano server.js
-```
-
-Substitua **BOT-TOKEN** pelo token do seu bot do Telegram.
-
-Substitua **CHAT-TOKEN** pelo ID do chat ou grupo onde deseja receber as mensagens.
-
-Pressione **CTRL + X**, depois **Y** e **Enter** para salvar.
-
----
-
-## 7. Criar e Configurar um Bot no Telegram
-
-1. No Telegram, procure por **@BotFather**.
-2. Envie o comando:
-   ```
-   /newbot
-   ```
-3. Siga as instruções e anote o **token** fornecido.
-4. Para obter o **ID do chat/grupo**:
-   - Adicione o bot ao grupo.
-   - Envie uma mensagem no grupo.
-   - Acesse:
-     ```
-     https://api.telegram.org/botSEU_BOT_TOKEN/getUpdates
-     ```
-   - Anote o `chat_id`.
-
----
-
-## 8. Iniciar o Servidor
-
-```bash
-node server.js
-```
-
-Se tudo estiver correto, a saída deve indicar que o servidor está rodando.
-
----
-
-## 9. Instalar e Configurar o Ngrok
-O **Ngrok** é usado para expor o servidor local para a internet.
-
-### 9.1 Baixar e Instalar o Ngrok
-```bash
-wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-stable-linux-amd64.zip
-unzip ngrok-stable-linux-amd64.zip
-chmod +x ngrok
-sudo mv ngrok /usr/local/bin/
-```
-
-### 9.2 Criar Conta no Ngrok
-Acesse [https://ngrok.com/](https://ngrok.com/) e crie uma conta.
-
-Após criar a conta, pegue seu **Authtoken** e rode:
-```bash
-ngrok authtoken SEU_AUTHTOKEN
-```
-
----
-
-## 10. Expor o Servidor com o Ngrok
-
-```bash
-ngrok http 8088
-```
-
-Copie a **URL gerada pelo Ngrok** (exemplo: `https://abc123.ngrok.io`).
-
----
-
-## 11. Atualizar a URL no Projeto
-Abra o arquivo `index.html`:
-```bash
-nano index.html
-```
-Substitua `https://abc123.ngrok.io` pela URL gerada pelo Ngrok:
-```js
-fetch("https://abc123.ngrok.io/send-location", {
-```
-Salve as alterações (**CTRL + X**, **Y**, **Enter**).
-
----
-
-## 12. Testar o Projeto
-Abra o **index.html** no navegador e permita o acesso à localização. Se tudo estiver correto, a localização será enviada para o bot no Telegram.
-
----
-
-## 13. Hospedar a Página HTML na Vercel
-
-Para deixar a interface do **BackScan** online, vamos hospedar o `index.html` na Vercel.
-
-### 13.1 Criar uma Conta na Vercel
-1. Acesse [https://vercel.com/](https://vercel.com/) e crie uma conta (pode usar o login do GitHub).
-2. Após logar, clique em **"New Project"**.
-
-### 13.2 Subir o Projeto para o GitHub
-Caso ainda não tenha subido o código:
-```bash
-git init
-git add index.html
-git commit -m "Adiciona interface do BackScan"
-git branch -M main
-git remote add origin https://github.com/seu-usuario/backscan-frontend.git
-git push -u origin main
-```
-
-### 13.3 Implantar na Vercel
-1. Na Vercel, clique em **"Import Git Repository"** e selecione o repositório do seu projeto.
-2. Escolha as configurações padrão e clique em **Deploy**.
-3. Após a implantação, copie a URL gerada (ex: `https://backscan.vercel.app`).
-
-Agora qualquer pessoa pode acessar sua página! 🚀
-
----
-
-## Conclusão
-Agora você tem o projeto BackScan rodando do zero no Ubuntu, mesmo sem experiência em programação. 🚀
-
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FPedroHBessa%2Fbackscan)
