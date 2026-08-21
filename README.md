@@ -30,7 +30,7 @@ Golpistas frequentemente se passam por familiares ou amigos pedindo dinheiro via
 ### Instalação Rápida
 
 ```bash
-git clone https://github.com/PedroHBessa/backscan.git
+git clone https://github.com/dev-leonunes/backscan.git
 cd backscan
 pnpm install
 vercel dev
@@ -59,4 +59,4 @@ Este projeto foi criado **exclusivamente para fins educacionais e de segurança*
 
 **Use com responsabilidade e sempre priorize sua segurança.** 🛡️
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FPedroHBessa%2Fbackscan)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fdev-leonunes%2Fbackscan)
